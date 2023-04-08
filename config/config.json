@@ -1,0 +1,10 @@
+{
+	"development": {
+        "config_id": "development",
+        "app_name": "BP Front End UI",
+	"bp_info_url": "http://localhost:22137/getCategory",
+	"bp_data_url": "http://localhost:43256/getRecords",
+	"bp_record_url": "http://localhost:10256/",
+	"exposedPort": "32137"
+	}
+}

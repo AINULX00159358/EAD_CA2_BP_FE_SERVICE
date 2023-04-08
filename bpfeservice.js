@@ -1,7 +1,6 @@
 const http = require('http');
 const { parse } = require('querystring');
 const fs = require('fs');
-const request = require('request');
 const querystring = require('querystring');
 
 
@@ -37,36 +36,37 @@ var endBody = '</div></body></html>';
 
 
 
-function getBpCategory(systolic, diastolic){
+function getBpCategory(systolic, diastolic) {
 	let parameterObj = {
 		"systolic": systolic,
 		"diastolic": diastolic
 	};
 
 	let bpCatUrl = BP_INFO_URL + "?" + querystring.stringify(parameterObj);
-	console.log("getBpCategory() URL--> ",bpCatUrl );
+	console.log("getBpCategory() URL--> ", bpCatUrl);
+
+	const options = {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+	};
 	return new Promise((resolve, reject) => {
-		request.get(bpCatUrl, function(error, response, data){
-			if (error){
-				console.error(bpCatUrl + " error  "+ error);
-				reject(new Error('Unable to get BP Category '+ error));
-			} else {
+		http.request(bpCatUrl, options, function (response) {
+			response.on('error', (e) => reject(e.message));
+			response.on('data', (data) => {
 				console.log(data);
-				resRcvd = JSON.parse(data);
-				if (resRcvd.error !== ''){
-					reject(resRcvd.error);
-				} else {
-					resolve(resRcvd);
-				}
-			}
-		});
+				let resRcvd = JSON.parse(data);
+				if (resRcvd.error && resRcvd.error !== '') reject(resRcvd.error);
+				else resolve(resRcvd);
+			});
+		}).end();
 	});
 }
 
 function getHistoricalReading(email){
     return new Promise((resolve, reject) => {
-		var options = {
-			uri: BP_DATA_URL,
+		let options = {
 			method: 'POST',
 			json: {
 				"email": email, 'limit': 5
@@ -75,26 +75,21 @@ function getHistoricalReading(email){
 				'Content-Type': 'application/json'
 			}
 		};
-		request.post(options, function (error, response, data){
-			if (error){
-				console.error(BP_DATA_URL + " error  "+ error);
-				reject(new Error('Unable to get BP Category '+ error));
-			} else {
-				console.log(data)
-				resolve(data);
-			}
-		});
+		http.request(BP_DATA_URL, options, function (response){
+			response.on('error', (e) => reject(e));
+			response.on('data', (data) => resolve(JSON.parse(data)));
+		}).end();
 	});
 }
 
-function collectFormData(request, callback) {
+function collectFormData(req, callback) {
     const FORM_URLENCODED = 'application/x-www-form-urlencoded';
-    if(request.headers['content-type'] === FORM_URLENCODED) {
+    if(req.headers['content-type'] === FORM_URLENCODED) {
         let body = '';
-        request.on('data', chunk => {
+        req.on('data', chunk => {
             body += chunk.toString();
         });
-        request.on('end', () => {
+        req.on('end', () => {
             var parsedBody = parse(body);
 			callback(parsedBody.email, parsedBody.systolic, parsedBody.diastolic);
         });
@@ -102,7 +97,7 @@ function collectFormData(request, callback) {
     else {
         callback(null);
     }
-};
+}
 
 function pushReading(email, systolic, diastolic, category){
 	let reading = {
@@ -113,8 +108,7 @@ function pushReading(email, systolic, diastolic, category){
 		timestamp: Date.now(),
 	};
 	return  new Promise((resolve, reject) => {
-			var options = {
-				uri: BP_RECORD_URL,
+			let options = {
 				method: 'POST',
 				json: {
 					email: email,
@@ -128,16 +122,10 @@ function pushReading(email, systolic, diastolic, category){
 				}
 			};
 			console.log("Persisting   ", reading);
-			request.post(options, function (error, response, data){
-				if (error){
-					console.error(BP_DATA_URL + " error  "+ error);
-					reject(new Error('Unable to get BP Category '+ error));
-				} else {
-					console.log(data)
-					resolve(reading);
-				}
-			});
-
+			http.request(BP_RECORD_URL, options, (response) => {
+				response.on('error', (e) => reject(e));
+				response.on('data' , (data) => resolve(reading));
+			}).end();
 	});
 }
 
@@ -153,8 +141,8 @@ function pushReading(email, systolic, diastolic, category){
 // }
 
 
-function css(request, response) {
-  if (request.url === '/default.css') {
+function css(req, response) {
+  if (req.url === '/default.css') {
     response.writeHead(200, {'Content-type' : 'text/css'});
     var fileContents = fs.readFileSync('./public/default.css', {encoding: 'utf8'});
     response.write(fileContents);
@@ -190,6 +178,7 @@ http.createServer(function (req, res) {
 		collectFormData(req, (email, s, d) => {
 			getBpCategory(s, d)
 				.then( cat => {
+					console.log("Category is ", cat);
 					pushReading(email, s, d, cat.category).then(r => console.log("recorded ", r))
 				// res.write('<center><div id="results_input">Systolic :'+ cat.systolic +' Diastolic '+ cat.diastolic + '</div>');
 				// res.write('<center><div id="results_category">Your blood Pressure category is: ' + cat.category + '</div>');

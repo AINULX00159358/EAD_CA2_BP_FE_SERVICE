@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bp-fe-app
+  labels:
+    app: bpfeapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bpfeapp
+  template:
+    metadata:
+      labels:
+        app: bpfeapp
+    spec:
+      containers:
+        - image: eadca2/bpfeapplication:v1
+          name: bpfeapplication
+          ports:
+            - containerPort: 32137
+          env:
+            - name: BP_INFO_URL
+              value: "http://bpinfosvc:22137/getCategory"
+            - name: BP_DATA_URL
+              value: "http://bpdatasvc:43256/getRecords"
+            - name: BP_RECORD_URL
+              value: "http://bprecordingsvc:30256/"

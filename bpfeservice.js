@@ -52,15 +52,20 @@ function getBpCategory(systolic, diastolic) {
 		},
 	};
 	return new Promise((resolve, reject) => {
-		http.request(bpCatUrl, options, function (response) {
+		let req = http.request(bpCatUrl, options, function (response) {
+			let dataBuffer = [];
+			if (response.statusCode !== 200) {
+				reject("received error "+ response.statusMessage);
+			}
 			response.on('error', (e) => reject(e.message));
-			response.on('data', (data) => {
-				console.log(data);
-				let resRcvd = JSON.parse(data);
+			response.on('data', (data) => dataBuffer.push(data));
+			response.on('end', ()=> {
+				let resRcvd = JSON.parse(Buffer.concat(dataBuffer).toString());
 				if (resRcvd.error && resRcvd.error !== '') reject(resRcvd.error);
 				else resolve(resRcvd);
 			});
-		}).end();
+		});
+		req.end();
 	});
 }
 
@@ -68,17 +73,21 @@ function getHistoricalReading(email){
     return new Promise((resolve, reject) => {
 		let options = {
 			method: 'POST',
-			json: {
-				"email": email, 'limit': 5
-			},
 			headers: {
 				'Content-Type': 'application/json'
 			}
 		};
-		http.request(BP_DATA_URL, options, function (response){
+		let req = http.request(BP_DATA_URL, options, function (response){
+			let dataBuffer = [];
+			if (response.statusCode !== 200) {
+				reject("received error "+ response.statusMessage);
+			}
 			response.on('error', (e) => reject(e));
-			response.on('data', (data) => resolve(JSON.parse(data)));
-		}).end();
+			response.on('data', (data) => dataBuffer.push(data));
+			response.on('end', ()=> resolve(JSON.parse(Buffer.concat(dataBuffer).toString())));
+		});
+		req.write(JSON.stringify({"email": email, 'limit': 15}));
+		req.end();
 	});
 }
 
@@ -110,22 +119,17 @@ function pushReading(email, systolic, diastolic, category){
 	return  new Promise((resolve, reject) => {
 			let options = {
 				method: 'POST',
-				json: {
-					email: email,
-					systolic: Number(systolic),
-					diastolic: Number(diastolic),
-					category: category,
-					timestamp: Date.now(),
-				},
 				headers: {
 					'Content-Type': 'application/json'
 				}
 			};
 			console.log("Persisting   ", reading);
-			http.request(BP_RECORD_URL, options, (response) => {
+			let req = http.request(BP_RECORD_URL, options, (response) => {
 				response.on('error', (e) => reject(e));
-				response.on('data' , (data) => resolve(reading));
-			}).end();
+				response.on('end' , (data) => resolve(reading));
+			});
+			req.write(JSON.stringify(reading));
+			req.end();
 	});
 }
 

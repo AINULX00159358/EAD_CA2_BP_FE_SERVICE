@@ -17,3 +17,10 @@ Sample FE code for Services for EAD CA1
  - 22137 can be changed in /config/config.json property "exposedPort"
 
 5. We cannot use nodejs request module as it is disabled and has vulnerability, we better use express  request": "^2.88.2"
+
+
+5. docker rmi -f $(docker images -q bpfeservice)
+
+6. docker build --no-cache --tag bpfeservice:CA2_v1 .
+
+7. docker run --name bpfeservice -p 32137:32137 --env-file=./envfile bpfeservice:CA2_v1

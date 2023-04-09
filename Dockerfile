@@ -7,7 +7,7 @@ WORKDIR /usr/src/app
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 COPY package*.json ./
 
-# Note NOT copying entire working dir, ONLY copying the package.json files 
+# Note NOT copying entire working dir, ONLY copying the package.json files
 # This allows us to take advantage of cached Docker layers
 
 RUN npm install
@@ -17,8 +17,8 @@ RUN npm install
 # Copy app source
 COPY . .
 
-# App binds to port 22137 - the EXPOSE instruction maps it to the docker daemon
-EXPOSE 22137
+# App binds to port 32137 - the EXPOSE instruction maps it to the docker daemon
+EXPOSE 32137
 
 # Will run node fe-server.js as defined in package.json
 CMD [ "npm", "start" ]

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  # The unique Service instance/name
+  name: bpfesvc
+spec:
+  # Add external load balancer
+  # *Only supported by some cloud providers*
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 32137
+      targetPort: 32137
+  selector:
+    # Loadbalance traffic across Pods matching
+    # this label selector
+    app: bpfeapp

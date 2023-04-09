@@ -2,3 +2,4 @@ node_modules/*
 package-lock.json
 .idea/*
 */cypress*
+bp_ui_service-*.tgz

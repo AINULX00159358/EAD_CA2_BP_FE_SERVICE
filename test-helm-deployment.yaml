@@ -9,10 +9,10 @@ variables:
   ACR.Name: 'ainhabacr'
   Azure.ServiceConnection: 'ainhabacrconnection'
 steps:
-  - task: HelmInstaller@1
-    displayName: 'installHelm'
-    inputs:
-      helmVersionToInstall: 'latest'
+  # - task: HelmInstaller@1
+  #   displayName: 'installHelm'
+  #   inputs:
+  #     helmVersionToInstall: 'latest'
   - task: AzureCLI@2
     displayName: 'Login to Azure Container Registry'
     inputs:
@@ -22,14 +22,15 @@ steps:
       inlineScript: |
         az acr login --name $(ACR.Name).azurecr.io
         az acr helm repo add -n $(ACR.Name).azurecr.io
-  - task: HelmDeploy@0
-    inputs:
-      connectionType: 'Azure Resource Manager'
-      azureSubscription: 'Azure for Students(7263e463-da66-4888-a897-f34f5acea14b)'
-      azureResourceGroup: 'k8s-resource-group'
-      kubernetesCluster: 'ainhabAKSCluster'
-      namespace: 'default'
-      command: 'install'
-      chartType: 'Name'
-      chartName: '$(ACR.Name).azurecr.io/charts/bp_info_service'
-      chartVersion: '1.0.0'
+        az acr repository show --name $(ACR.Name) --repository charts/bp_info_service
+  # - task: HelmDeploy@0
+  #   inputs:
+  #     connectionType: 'Azure Resource Manager'
+  #     azureSubscription: 'Azure for Students(7263e463-da66-4888-a897-f34f5acea14b)'
+  #     azureResourceGroup: 'k8s-resource-group'
+  #     kubernetesCluster: 'ainhabAKSCluster'
+  #     namespace: 'default'
+  #     command: 'install'
+  #     chartType: 'Name'
+  #     chartName: '$(ACR.Name).azurecr.io/charts/bp_info_service'
+  #     chartVersion: '1.0.0'

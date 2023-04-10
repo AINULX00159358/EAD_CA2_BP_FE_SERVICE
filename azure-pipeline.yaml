@@ -1,0 +1,67 @@
+# build docker
+# publish to container registry
+# build helm
+# publish to helm repo
+
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  - None
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: 'bc2aadcc-1517-44b8-9314-ea3f6c496a86'
+  imageRepository: 'eadca2/bpfeapplication'
+  containerRegistry: 'ainhabacr.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
+  azureACRSubscription: '7263e463-da66-4888-a897-f34f5acea14b'
+  azureACRResourceGroup: 'k8s-resource-group'
+  ACR.Name: 'ainhabacr'
+  Azure.ServiceConnection: 'ainhabacrconnection'
+  tag: 'v1'
+
+
+steps:
+#  - task: NodeTool@0
+#    inputs:
+#      versionSource: 'spec'
+#      versionSpec: '6.x'
+#    displayName: 'Installing nodejs as a pre-requiste for unittest'
+  - task: Docker@2
+    displayName: Build and push an image to container registry
+    inputs:
+      command: buildAndPush
+      repository: $(imageRepository)
+      dockerfile: $(dockerfilePath)
+      containerRegistry: $(dockerRegistryServiceConnection)
+      tags: |
+        $(tag)
+  # Package and deploy Helm charts v0
+  - task: HelmDeploy@0
+    displayName: 'Package the helm chart'
+    inputs:
+      command: 'package'
+      chartPath: '$(Build.SourcesDirectory)/helm'
+      save: true
+  
+  - task: AzureCLI@2
+    displayName: 'Login to Azure Container Registry'
+    inputs:
+      azureSubscription: 'Azure for Students(7263e463-da66-4888-a897-f34f5acea14b)'
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        az acr login --name $(ACR.Name)
+  - task: HelmInstaller@1
+    displayName: 'Helm Push to Container Registry'
+    inputs:
+      helmVersionToInstall: 'latest'
+  - bash: |
+      ls -l $(Build.ArtifactStagingDirectory)
+      helm push $(Build.ArtifactStagingDirectory)/bp_ui_service-1.0.0.tgz oci://$(ACR.Name).azurecr.io/charts/

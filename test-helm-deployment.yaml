@@ -31,5 +31,5 @@ steps:
       namespace: 'default'
       command: 'install'
       chartType: 'Name'
-      chartName: 'charts/bp_info_service'
+      chartName: '$(ACR.Name).azurecr.io/charts/bp_info_service'
       chartVersion: '1.0.0'

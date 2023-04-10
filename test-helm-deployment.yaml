@@ -26,7 +26,7 @@ steps:
     displayName: Run helm deploy
     inputs:
       script: |
-        helm install bpinfoservice $(ACR.Name).azurecr.io/charts/bp_info_service --version 1.0.0
+        helm install bpinfoservice oci://$(ACR.Name).azurecr.io/charts/bp_info_service --version 1.0.0
   # - task: HelmDeploy@0
   #   inputs:
   #     connectionType: 'Azure Resource Manager'

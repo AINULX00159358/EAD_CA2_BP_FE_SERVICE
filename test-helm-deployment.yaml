@@ -28,11 +28,11 @@ steps:
       connectionType: Kubernetes Service Connection
       kubernetesServiceEndpoint: 52e7b636-9ce7-4f7d-be99-3bb1c59c1584
       namespace: default
-      command: 'upgrade'
+      command: 'install'
       chartType: Name
       chartName: 'oci://$(ACR.Name).azurecr.io/charts/bpinfoservice'
       releaseName: bpinfoservice
       upgradetiller: false
       save: false
       install: false
-      arguments: --install --timeout 1m
+      arguments: --timeout 1m

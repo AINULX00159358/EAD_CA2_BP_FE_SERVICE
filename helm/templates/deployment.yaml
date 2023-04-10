@@ -15,7 +15,7 @@ spec:
         app: bpfeapp
     spec:
       containers:
-        - image: eadca2/bpfeapplication:v1
+        - image: ainhabacr.azurecr.io/eadca2/bpfeapplication:v1
           name: bpfeapplication
           ports:
             - containerPort: 32137

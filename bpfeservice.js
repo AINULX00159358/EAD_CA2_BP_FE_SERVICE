@@ -168,7 +168,7 @@ function writeHistorical(res, hist_res){
 	res.write('<div id="space"><p></p></p></div>');
 	res.write('<table border="1"><tr><th>email</th><th>date</th><th>systolic</th><th>diastolic</th><th>category</th></tr>')
 	hist_res.forEach(function(item) {
-		res.write('<tr><td>item.email</td><td>' + new Date(Number(item.timestamp)).toISOString() + '</td><td>'+item.systolic+'</td><td>'+item.diastolic+'</td><td>'+item.category+'</td></tr>')
+		res.write('<tr><td>'+item.email+'</td><td>' + new Date(Number(item.timestamp)).toISOString() + '</td><td>'+item.systolic+'</td><td>'+item.diastolic+'</td><td>'+item.category+'</td></tr>')
 	});
 	res.write('</div><div id="space"></div>');
 

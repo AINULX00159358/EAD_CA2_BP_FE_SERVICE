@@ -17,6 +17,7 @@ spec:
       containers:
         - image: ainhabacr.azurecr.io/eadca2/bpfeapplication:v1
           name: bpfeapplication
+          imagePullPolicy: Always
           ports:
             - containerPort: 32137
           env:

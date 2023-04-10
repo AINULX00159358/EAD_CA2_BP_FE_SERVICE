@@ -31,7 +31,9 @@ steps:
       command: 'install'
       chartType: Name
       chartName: 'oci://$(ACR.Name).azurecr.io/charts/bpinfoservice'
-      releaseName: bpinfoservice
+      # releaseName: bpinfoservice
+      waitForExecution: false
+      force: true
       upgradetiller: false
       save: false
       install: false

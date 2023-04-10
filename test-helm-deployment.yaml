@@ -21,8 +21,7 @@ steps:
       scriptLocation: inlineScript
       inlineScript: |
         az acr login --name $(ACR.Name).azurecr.io
-        az acr helm repo add -n $(ACR.Name).azurecr.io/charts
-        az acr helm repo list
+        az acr helm repo add -n $(ACR.Name).azurecr.io
   - task: HelmDeploy@0
     inputs:
       connectionType: 'Azure Resource Manager'

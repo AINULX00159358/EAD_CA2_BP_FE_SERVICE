@@ -9,10 +9,11 @@ variables:
   ACR.Name: 'ainhabacr'
   Azure.ServiceConnection: 'ainhabacrconnection'
 steps:
-  # - task: HelmInstaller@1
-  #   displayName: 'installHelm'
-  #   inputs:
-  #     helmVersionToInstall: 'latest'
+  - task: HelmInstaller@0
+    displayName: 'installHelm'
+    inputs:
+      helmVersion: 3.9.3
+      kubectlVersion: 1.26.3
   - task: AzureCLI@2
     displayName: 'Login to Azure Container Registry'
     inputs:
@@ -21,10 +22,11 @@ steps:
       scriptLocation: inlineScript
       inlineScript: |
         az acr login --name $(ACR.Name).azurecr.io
-        az acr helm repo add -n $(ACR.Name).azurecr.io
-        az acr repository show --name $(ACR.Name) --repository charts/bp_info_service
-        az acr helm repo update
-        az acr helm install bp_info_service oci://$(ACR.Name).azurecr.io/charts/bp_info_service --version 1.0.0
+  - task: CmdLine@2
+    displayName: Run helm deploy
+    inputs:
+      script: |
+        helm install bpinfoservice $(ACR.Name).azurecr.io/charts/bp_info_service --version 1.0.0
   # - task: HelmDeploy@0
   #   inputs:
   #     connectionType: 'Azure Resource Manager'

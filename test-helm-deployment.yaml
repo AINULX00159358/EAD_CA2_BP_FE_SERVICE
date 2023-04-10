@@ -27,29 +27,29 @@ steps:
   #   inputs:
   #     script: |
   #       helm install bpinfoservice oci://$(ACR.Name).azurecr.io/charts/bpinfoservice --version 1.0.0
-  - task: HelmDeploy@0
-    inputs:
-      connectionType: 'Azure Resource Manager'
-      azureSubscription: 'Azure for Students(7263e463-da66-4888-a897-f34f5acea14b)'
-      azureResourceGroup: 'k8s-resource-group'
-      kubernetesCluster: 'ainhabAKSCluster'
-      namespace: 'default'
-      command: 'install'
-      chartType: 'Name'
-      chartName: 'oci://$(ACR.Name).azurecr.io/charts/bpinfoservice'
-      chartVersion: '1.0.0'
-
   # - task: HelmDeploy@0
-  #   displayName: 'helm upgrade or install ap'
   #   inputs:
-  #     connectionType: Kubernetes Service Connection
-  #     kubernetesServiceEndpoint: 52e7b636-9ce7-4f7d-be99-3bb1c59c1584
-  #     namespace: default
-  #     command: 'upgrade '
-  #     chartType: FilePath
-  #     chartPath: helm/eadlab3
-  #     releaseName: ead-lab3-mysql
-  #     upgradetiller: false
-  #     save: false
-  #     install: false
-  #     arguments: --install
+  #     connectionType: 'Azure Resource Manager'
+  #     azureSubscription: 'Azure for Students(7263e463-da66-4888-a897-f34f5acea14b)'
+  #     azureResourceGroup: 'k8s-resource-group'
+  #     kubernetesCluster: 'ainhabAKSCluster'
+  #     namespace: 'default'
+  #     command: 'install'
+  #     chartType: 'Name'
+  #     chartName: 'oci://$(ACR.Name).azurecr.io/charts/bpinfoservice'
+  #     chartVersion: '1.0.0'
+
+  - task: HelmDeploy@0
+    displayName: 'helm upgrade or install ap'
+    inputs:
+      connectionType: Kubernetes Service Connection
+      kubernetesServiceEndpoint: 52e7b636-9ce7-4f7d-be99-3bb1c59c1584
+      namespace: default
+      command: 'upgrade '
+      chartType: Name
+      chartName: 'oci://$(ACR.Name).azurecr.io/charts/bpinfoservice'
+      releaseName: bpinfoservice
+      upgradetiller: false
+      save: false
+      install: false
+      arguments: --install

@@ -6,7 +6,7 @@ metadata:
 spec:
   # Add external load balancer
   # *Only supported by some cloud providers*
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     - name: http
       port: 32137

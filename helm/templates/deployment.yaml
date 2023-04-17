@@ -27,3 +27,5 @@ spec:
               value: "http://bpdatasvc:43256/getRecords"
             - name: BP_RECORD_URL
               value: "http://bprecordingsvc:30256/"
+            - name: SPACE
+              value: {{ .Values.space }}

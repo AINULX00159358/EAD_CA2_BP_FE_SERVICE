@@ -17,7 +17,9 @@ const BP_RECORD_URL = process.env.BP_RECORD_URL || config.development.bp_record_
 var header = '<!doctype html><html>'+
 		     '<head>';
 
-var body =  '</head><body><div id="container">' +
+const getEnv = '<div id="'+process.env.SPACE+'-circle"></div>';
+
+var body =  getEnv + '</head><body><div id="container">' +
 				 '<div id="logo">' + global.gConfig.app_name + '</div>' +
 				 '<div id="space"></div>' +
 				 '<div id="form">' +

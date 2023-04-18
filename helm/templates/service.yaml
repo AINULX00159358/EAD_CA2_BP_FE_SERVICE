@@ -7,11 +7,11 @@ spec:
   # Add external load balancer
   # *Only supported by some cloud providers*
   # type: LoadBalancer
-  type: ClusterIP
+  type: {{ .Values.befesvc.serviceType }}
   ports:
     - name: http
-      port: 32137
-      targetPort: 32137
+      port: {{ .Values.befesvc.port }}
+      targetPort: {{ .Values.befesvc.targetPort }}
   selector:
     # Loadbalance traffic across Pods matching
     # this label selector

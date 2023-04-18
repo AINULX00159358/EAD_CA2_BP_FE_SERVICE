@@ -10,6 +10,7 @@
 
 trigger:
   - None
+name: FE-SERVICE-BUILD
 
 pool:
   vmImage: ubuntu-latest

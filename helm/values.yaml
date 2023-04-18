@@ -1,4 +1,5 @@
-befesvc.serviceType=ClusterIP
-befesvc.port=32137
-befesvc.targetPort=32137
-space=none
+befesvc:
+  serviceType: "ClusterIP"
+  port: 32137
+  targetPort: 32137
+space: "none"

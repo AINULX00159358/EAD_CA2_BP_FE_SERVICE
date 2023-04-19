@@ -1,0 +1,62 @@
+pool:
+  vmImage: ubuntu-latest
+
+name: FE-SERVICE-TEST
+
+variables:
+  trivyVersion: 0.40.0
+  ScanResultsPath: trivyScan
+
+steps:
+  - task: Npm@1
+    displayName: 'npm install'
+    inputs:
+      verbose: true
+    retryCountOnTaskFailure: 2
+
+  - task: DockerInstaller@0
+    displayName: 'Install Docker 17.09.0-ce'
+
+
+  - bash: |
+      echo 'running docker build'
+      docker build --no-cache --tag bpfeapplication:CA2_TEST_V1 $(Build.SourcesDirectory)
+      echo 'running docker image'
+      docker run --name bpfeapplication-test -p 32137:32137 -d bpfeapplication:CA2_TEST_V1
+    displayName: 'Build and run docker image'
+    continueOnError: true
+
+  - script: |
+      sudo apt-get install rpm
+       wget -q https://github.com/aquasecurity/trivy/releases/download/v$(trivyVersion)/trivy_$(trivyVersion)_Linux-64bit.deb
+       sudo dpkg -i trivy_$(trivyVersion)_Linux-64bit.deb
+       mkdir $(ScanResultsPath)
+       trivy image --scanners vuln,config,secret --severity CRITICAL,HIGH -o $(ScanResultsPath)/results.table bpfeapplication:CA2_TEST_V1
+    displayName: 'Scan using Trivy scan'
+
+#  - bash: |
+#      # Write your commands here
+#      echo "Running Cypress Test"
+#      ./node_modules/cypress/bin/cypress run --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpinfoservice-Result.xml,toConsole=true"
+#      echo "Printing Report and workingDir in  $(System.DefaultWorkingDirectory)"
+#      cat ./cypress/results/TEST-bpinfoservice-Result.xml
+#    displayName: 'Cypress Test'
+#
+#    continueOnError: true
+
+  - bash: |
+      docker stop bpfeapplication-test || true && docker rm bpfeapplication-test || true
+    displayName: 'kill running docker copy'
+    continueOnError: true
+    condition: always()
+
+#  - task: PublishTestResults@2
+#    displayName: 'Publish Test Results ead-ca2-bp-info-service.xml'
+#    inputs:
+#      testResultsFiles: '**/TEST-*.xml'
+#      failTaskOnFailedTests: true
+#      testRunTitle: 'FE-SERVICE-TEST'
+
+  - task: PublishHtmlReport@1
+    inputs:
+      reportDir: '$(ScanResultsPath)/results.table'

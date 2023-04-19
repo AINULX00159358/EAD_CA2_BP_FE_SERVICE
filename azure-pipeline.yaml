@@ -12,6 +12,13 @@ trigger:
   - None
 name: FE-SERVICE-BUILD
 
+resources:
+  pipelines:
+    - pipeline: FE-SERVICE-TEST # Name of the pipeline resource.
+      source: FE-SERVICE-TEST # The name of the pipeline referenced by this pipeline resource.
+      trigger: true # Run app-ci pipeline when any run of security-lib-ci completes
+
+
 pool:
   vmImage: ubuntu-latest
 
@@ -29,11 +36,6 @@ variables:
 
 
 steps:
-#  - task: NodeTool@0
-#    inputs:
-#      versionSource: 'spec'
-#      versionSpec: '6.x'
-#    displayName: 'Installing nodejs as a pre-requiste for unittest'
   - task: Docker@2
     displayName: Build and push an image to container registry
     inputs:

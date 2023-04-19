@@ -12,11 +12,11 @@ trigger:
   - None
 name: FE-SERVICE-BUILD
 
-resources:
-  pipelines:
-    - pipeline: FE-SERVICE-TEST # Name of the pipeline resource.
-      source: FE-SERVICE-TEST # The name of the pipeline referenced by this pipeline resource.
-      trigger: true # Run app-ci pipeline when any run of security-lib-ci completes
+# resources:
+#   pipelines:
+#     - pipeline: FE-SERVICE-TEST # Name of the pipeline resource.
+#       source: FE-SERVICE-TEST # The name of the pipeline referenced by this pipeline resource.
+#       trigger: true # Run app-ci pipeline when any run of security-lib-ci completes
 
 
 pool:

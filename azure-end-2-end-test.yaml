@@ -34,15 +34,16 @@ steps:
        trivy image --scanners vuln,config,secret --severity CRITICAL,HIGH -o $(ScanResultsPath)/results.table bpfeapplication:CA2_TEST_V1
     displayName: 'Scan using Trivy scan'
 
-#  - bash: |
-#      # Write your commands here
-#      echo "Running Cypress Test"
-#      ./node_modules/cypress/bin/cypress run --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpinfoservice-Result.xml,toConsole=true"
-#      echo "Printing Report and workingDir in  $(System.DefaultWorkingDirectory)"
-#      cat ./cypress/results/TEST-bpinfoservice-Result.xml
-#    displayName: 'Cypress Test'
-#
-#    continueOnError: true
+  - bash: |
+      # Write your commands here
+      echo "Running Cypress Test"
+      npm install
+      ./node_modules/cypress/bin/cypress run --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpinfoservice-Result.xml,toConsole=true"
+      echo "Printing Report and workingDir in  $(System.DefaultWorkingDirectory)"
+      cat ./cypress/results/TEST-bpinfoservice-Result.xml
+    displayName: 'Cypress Test'
+
+    continueOnError: true
 
   - bash: |
       docker stop bpfeapplication-test || true && docker rm bpfeapplication-test || true

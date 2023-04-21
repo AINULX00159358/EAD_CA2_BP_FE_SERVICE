@@ -1,0 +1,35 @@
+pool:
+  vmImage: ubuntu-latest
+
+name: FE-SERVICE-E2E
+
+steps:
+  - task: Npm@1
+    displayName: 'npm install'
+    inputs:
+      verbose: true
+    retryCountOnTaskFailure: 2
+
+
+  - bash: |
+      echo "Running Cypress Test"
+      npm install
+      npx cypress run --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
+    displayName: 'Cypress Test'
+    continueOnError: true
+    enabled: true
+
+#  - task: Npm@1
+#    inputs:
+#      command: 'custom'
+#      workingDir: '$(Build.SourcesDirectory)'
+#      customCommand: 'run  cypress.run'
+#    displayName: npm cyress.run
+
+
+  - task: PublishTestResults@2
+    displayName: 'Publish Test Results ead-ca2-bp-fe-service'
+    inputs:
+      testResultsFiles: '**/TEST-*.xml'
+      failTaskOnFailedTests: true
+      testRunTitle: 'FE-SERVICE-E2T'

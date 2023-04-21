@@ -62,11 +62,10 @@ steps:
       # Write your commands here
       echo "Running Cypress Test"
       npm install
-      curl -v -X GET http://localhost:32137
       npx cypress run --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
     displayName: 'Cypress Test'
     continueOnError: true
-    enabled: false
+    enabled: true
 
 #  - task: Npm@1
 #    inputs:
@@ -99,7 +98,7 @@ steps:
       testResultsFiles: '**/TEST-*.xml'
       failTaskOnFailedTests: true
       testRunTitle: 'FE-SERVICE-TEST'
-    enabled: false
+    enabled: true
 
   - task: PublishHtmlReport@1
     inputs:

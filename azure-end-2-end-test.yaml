@@ -3,7 +3,6 @@ pool:
 
 name: FE-SERVICE-TEST
 
-trigger: None
 
 variables:
   trivyVersion: 0.40.0

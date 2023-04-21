@@ -3,6 +3,8 @@ pool:
 
 name: FE-SERVICE-E2E
 
+trigger:  None
+
 steps:
   - task: Npm@1
     displayName: 'npm install'

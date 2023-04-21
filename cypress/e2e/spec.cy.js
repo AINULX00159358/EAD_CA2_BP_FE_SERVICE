@@ -7,7 +7,7 @@ describe('E2E UI Test', () => {
   it("test connection", () => {
     cy.request({
       method: 'GET',
-      url: 'http://localhost:32137',
+      url: 'http://20.107.134.51:8080/live',
       headers: {
         'Content-Type': 'text/html; charset=utf-8',
       }
@@ -15,8 +15,8 @@ describe('E2E UI Test', () => {
   })
 
 
-  it.skip('should visit', () => {
-    cy.visit("http://localhost:32137");
+  it('should visit', () => {
+    cy.visit('http://20.107.134.51:8080/live');
     cy.wait(1000);
     cy.get('#logo').should('contain.text', 'UI');
     cy.get('form').within(($form) => {

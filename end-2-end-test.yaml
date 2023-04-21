@@ -45,7 +45,7 @@ steps:
   - task: Npm@1
     inputs:
       command: 'custom'
-      customCommand: 'cypress.run --env BP_UI_SERVICE=http://4.207.193.144:32137/ --browser chrome --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"'
+      customCommand: 'run cypress.run --env BP_UI_SERVICE=http://4.207.193.144:32137/ --browser chrome --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"'
     displayName: 'Run End to End Test using Cypress'
     continueOnError: false
 

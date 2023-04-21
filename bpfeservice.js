@@ -6,7 +6,22 @@ const querystring = require('querystring');
 
 //Loading the config fileContents
 const config = require('./config/config.json');
-const defaultConfig = process.env.PROFILE || config.development;
+let defaultConfig = config.development;
+
+if (process.env.PROFILE) {
+	switch (process.env.PROFILE) {
+		case "test": {
+			 defaultConfig = config.test;
+			 break;
+		}
+		case "cloud": {
+			defaultConfig = config.cloud;
+			break;
+		}
+	}
+}
+
+
 global.gConfig = defaultConfig;
 console.log("Config is set to ", defaultConfig.config_id, " based on env ", process.env.PROFILE)
 const BP_INFO_URL = process.env.BP_INFO_URL || defaultConfig.bp_info_url

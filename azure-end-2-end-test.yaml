@@ -29,8 +29,8 @@ steps:
       trivy image --scanners vuln --severity CRITICAL,HIGH -o $(ScanResultsPath)/results.table bpfeapplication:CA2_TEST_V1
     displayName: 'Scan using Trivy scan'
 
-#  - script: |
-#      docker network create bpwebapp
+  - script: |
+      docker network create bpwebapp
 #      docker run --name mongo -p 27017:27017 --rm -d --net bpwebapp mongo:latest
 #
 #  - task: AzureCLI@2
@@ -92,12 +92,12 @@ steps:
     continueOnError: true
     condition: always()
 
-#  - task: PublishTestResults@2
-#    displayName: 'Publish Test Results ead-ca2-bp-fe-service'
-#    inputs:
-#      testResultsFiles: '**/TEST-*.xml'
-#      failTaskOnFailedTests: true
-#      testRunTitle: 'FE-SERVICE-TEST'
+  - task: PublishTestResults@2
+    displayName: 'Publish Test Results ead-ca2-bp-fe-service'
+    inputs:
+      testResultsFiles: '**/TEST-*.xml'
+      failTaskOnFailedTests: true
+      testRunTitle: 'FE-SERVICE-TEST'
 
   - task: PublishHtmlReport@1
     inputs:

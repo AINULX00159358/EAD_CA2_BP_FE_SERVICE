@@ -1,22 +1,12 @@
 describe('E2E UI Test', () => {
 
-  // before(() => {
-  //   cy.visit("http://localhost:32137", { timeout: 30000 });
-  // });
-//
-//  it("test connection", () => {
-//    cy.request({
-//      method: 'GET',
-//      url: 'http://4.207.193.144:32137/',
-//      headers: {
-//        'Content-Type': 'text/html; charset=utf-8',
-//      }
-//    }).then(content => content.body.toString()).should('not.be.empty').and('contain', 'BP Front End UI (test 1.0.0  none)');
-//  })
+before(() => {
+
+   cy.visit(Cypress.env('BP_UI_SERVICE'), { timeout: 30000 });
+ });
 
 
   it('should visit', () => {
-    cy.visit('http://4.207.193.144:32137/');
     cy.wait(1000);
     cy.get('#logo').should('contain.text', 'UI');
     cy.get('form').within(($form) => {

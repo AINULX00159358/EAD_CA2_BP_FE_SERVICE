@@ -1,5 +1,5 @@
 pool:
-  vmImage: ubuntu-latest
+  vmImage: windows-2022
 
 name: FE-SERVICE-E2E
 
@@ -14,7 +14,7 @@ steps:
   - bash: |
       echo "Running Cypress Test"
       npm install
-      npx cypress run --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
+      npx cypress run --env BP_UI_SERVICE=http://4.207.193.144:32137/ --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
     displayName: 'Cypress Test'
     continueOnError: true
     enabled: true

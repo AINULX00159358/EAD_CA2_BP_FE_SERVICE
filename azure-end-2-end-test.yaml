@@ -3,6 +3,8 @@ pool:
 
 name: FE-SERVICE-TEST
 
+trigger: None
+
 variables:
   trivyVersion: 0.40.0
   ScanResultsPath: trivyScan
@@ -57,15 +59,15 @@ steps:
     displayName: 'Start docker Image for FE Service'
     continueOnError: true
 
-
-  - bash: |
-      # Write your commands here
-      echo "Running Cypress Test"
-      npm install
-      npx cypress run --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
-    displayName: 'Cypress Test'
-    continueOnError: true
-    enabled: true
+#
+#  - bash: |
+#      # Write your commands here
+#      echo "Running Cypress Test"
+#      npm install
+#      npx cypress run --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
+#    displayName: 'Cypress Test'
+#    continueOnError: true
+#    enabled: true
 
 #  - task: Npm@1
 #    inputs:
@@ -92,13 +94,13 @@ steps:
     continueOnError: true
     condition: always()
 
-  - task: PublishTestResults@2
-    displayName: 'Publish Test Results ead-ca2-bp-fe-service'
-    inputs:
-      testResultsFiles: '**/TEST-*.xml'
-      failTaskOnFailedTests: true
-      testRunTitle: 'FE-SERVICE-TEST'
-    enabled: true
+#  - task: PublishTestResults@2
+#    displayName: 'Publish Test Results ead-ca2-bp-fe-service'
+#    inputs:
+#      testResultsFiles: '**/TEST-*.xml'
+#      failTaskOnFailedTests: true
+#      testRunTitle: 'FE-SERVICE-TEST'
+#    enabled: true
 
   - task: PublishHtmlReport@1
     inputs:

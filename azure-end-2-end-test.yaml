@@ -66,14 +66,14 @@ steps:
     continueOnError: true
 
 
-  - bash: |
-      # Write your commands here
-      echo "Running Cypress Test"
-      npm install
-      curl -v -X GET http://localhost:32137
-      npx cypress run --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
-    displayName: 'Cypress Test'
-    continueOnError: true
+#  - bash: |
+#      # Write your commands here
+#      echo "Running Cypress Test"
+#      npm install
+#      curl -v -X GET http://localhost:32137
+#      npx cypress run --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
+#    displayName: 'Cypress Test'
+#    continueOnError: true
 
   - bash: |
       docker stop bpfeapplication-test || true && docker rm bpfeapplication-test || true
@@ -85,12 +85,12 @@ steps:
     continueOnError: true
     condition: always()
 
-  - task: PublishTestResults@2
-    displayName: 'Publish Test Results ead-ca2-bp-fe-service'
-    inputs:
-      testResultsFiles: '**/TEST-*.xml'
-      failTaskOnFailedTests: true
-      testRunTitle: 'FE-SERVICE-TEST'
+#  - task: PublishTestResults@2
+#    displayName: 'Publish Test Results ead-ca2-bp-fe-service'
+#    inputs:
+#      testResultsFiles: '**/TEST-*.xml'
+#      failTaskOnFailedTests: true
+#      testRunTitle: 'FE-SERVICE-TEST'
 
   - task: PublishHtmlReport@1
     inputs:

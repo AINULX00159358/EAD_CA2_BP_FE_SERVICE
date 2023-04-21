@@ -20,7 +20,7 @@ steps:
       scriptLocation: inlineScript
       inlineScript: |
         az acr login --name ainhabacr.azurecr.io
-  
+
 #  - task: DockerInstaller@0
 #    inputs:
 #      dockerVersion: '17.09.0-ce'
@@ -45,7 +45,7 @@ steps:
 
   - bash: |
       echo "Running Cypress Test"
-      CYPRESS_BASE_URL=http://20.105.119.110:32137/
+      export CYPRESS_APPURL=http://20.105.119.110:32137/
       npx cypress run --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
     displayName: 'Cypress Test'
     continueOnError: true

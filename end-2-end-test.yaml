@@ -10,11 +10,34 @@ steps:
       verbose: true
     retryCountOnTaskFailure: 2
 
+  - task: AzureCLI@2
+    displayName: 'Login to Azure Container Registry'
+    inputs:
+      azureSubscription: 'Azure for Students(7263e463-da66-4888-a897-f34f5acea14b)'
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        az acr login --name ainhabacr.azurecr.io
+
+  - bash: |
+        docker pull ainhabacr.azurecr.io/eadca2/bpdataservice:v1
+        docker pull ainhabacr.azurecr.io/eadca2/bpinfoservice:v1
+        docker pull ainhabacr.azurecr.io/eadca2/bprecordingservice:v1
+        docker pull ainhabacr.azurecr.io/eadca2/eadca2/bpfeapplication:v1
+        docker network create bpwebapp
+        docker run --name mongo -p 27017:27017 --rm -d --net bpwebapp mongo:latest
+        docker run --name bpdataservice-test -p 43256:43256 --net bpwebapp --rm -d -e "MONGO_CONN_URI=mongodb://mongo:27017" ainhabacr.azurecr.io/eadca2/bpdataservice:v1
+        docker run --name bpinfoservice-test -p 22137:22137 --net bpwebapp --rm -d -e "MONGO_CONN_URI=mongodb://mongo:27017" ainhabacr.azurecr.io/eadca2/bpinfoservice:v1
+        docker run --name bprecordingservice-test -p 30256:30256 --net bpwebapp --rm -d -e "MONGO_CONN_URI=mongodb://mongo:27017" ainhabacr.azurecr.io/eadca2/bprecordingservice:v1
+        docker run --name bpfeapplication-test -p 32137:32137 --net bpwebapp --rm -d -e "PROFILE=test" ainhabacr.azurecr.io/eadca2/bpfeapplication:v1
+    continueOnError: false
+    displayName: 'start Other Docker Services'
+
 
   - bash: |
       echo "Running Cypress Test"
       npm install
-      npx cypress run --env BP_UI_SERVICE=http://4.207.193.144:32137/ --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
+      npx cypress run --env BP_UI_SERVICE=http://127.0.0.1:32137/ --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
     displayName: 'Cypress Test'
     continueOnError: true
     enabled: true
@@ -25,6 +48,16 @@ steps:
 #      workingDir: '$(Build.SourcesDirectory)'
 #      customCommand: 'run  cypress.run'
 #    displayName: npm cyress.run
+
+  - bash: |
+      docker stop bpfeapplication-test || true && docker rm bpfeapplication-test || true
+      docker stop bpinfoservice-test || true && docker rm bpinfoservice-test || true
+      docker stop bpdataservice-test || true && docker rm bpdataservice-test || true
+      docker stop bprecordingservice-test || true && docker rm bprecordingservice-test || true
+      docker stop mongo || true && docker mongo || true
+    displayName: 'kill running docker'
+    continueOnError: true
+    condition: always()
 
 
   - task: PublishTestResults@2

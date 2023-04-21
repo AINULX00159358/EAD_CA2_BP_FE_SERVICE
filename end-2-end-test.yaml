@@ -3,7 +3,7 @@ pool:
 
 name: FE-SERVICE-E2E
 
-trigger: None
+trigger: none
 
 steps:
   - task: Npm@1

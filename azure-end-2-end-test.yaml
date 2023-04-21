@@ -57,6 +57,10 @@ steps:
 
   - bash: |
       docker run --name bpfeapplication-test -p 32137:32137 --net bpwebapp --rm -d -e "PROFILE=test" bpfeapplication:CA2_TEST_V1
+      docker ps
+      docker log bpdataservice-test
+      docker log bprecordingservice-test
+      docker log bpfeapplication-test
     displayName: 'Start docker Image for FE Service'
     continueOnError: true
 

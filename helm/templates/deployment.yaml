@@ -22,6 +22,6 @@ spec:
             - containerPort: 32137
           env:
             - name: PROFILE
-              value: { { .Values.profile } }
+              value: {{ .Values.profile }}
             - name: SPACE
               value: {{ .Values.space }}

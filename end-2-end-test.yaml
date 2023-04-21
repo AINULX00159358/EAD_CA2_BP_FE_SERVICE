@@ -38,14 +38,15 @@ steps:
       docker run --name bpfeapplication-test -p 32137:32137 --net bpwebapp --rm -d -e "PROFILE=test" ainhabacr.azurecr.io/eadca2/bpfeapplication:v1
       sleep 5
       docker ps
+    displayName: 'Run all Docker images'
+    continueOnError: false
 
   - bash: |
       echo "Running Cypress Test"
       export CYPRESS_APPURL=http://127.0.0.1:32137/
       npx cypress run --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
     displayName: 'Cypress Test'
-    continueOnError: true
-    enabled: true
+    continueOnError: false
 
 #  - task: Npm@1
 #    inputs:
@@ -54,15 +55,15 @@ steps:
 #    displayName: 'Run End to End Test using Cypress'
 #    continueOnError: false
 
-  - bash: |
-      docker stop bpfeapplication-test || true && docker rm bpfeapplication-test || true
-      docker stop bpinfoservice-test || true && docker rm bpinfoservice-test || true
-      docker stop bpdataservice-test || true && docker rm bpdataservice-test || true
-      docker stop bprecordingservice-test || true && docker rm bprecordingservice-test || true
-      docker stop mongo || true && docker mongo || true
-    displayName: 'kill running docker'
-    continueOnError: true
-    condition: always()
+#  - bash: |
+#      docker stop bpfeapplication-test || true && docker rm bpfeapplication-test || true
+#      docker stop bpinfoservice-test || true && docker rm bpinfoservice-test || true
+#      docker stop bpdataservice-test || true && docker rm bpdataservice-test || true
+#      docker stop bprecordingservice-test || true && docker rm bprecordingservice-test || true
+#      docker stop mongo || true && docker mongo || true
+#    displayName: 'kill running docker'
+#    continueOnError: true
+#    condition: always()
 
 
   - task: PublishTestResults@2

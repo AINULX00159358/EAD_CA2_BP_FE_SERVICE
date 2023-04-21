@@ -31,6 +31,12 @@ steps:
       mkdir $(ScanResultsPath)
       trivy image --scanners vuln,config,secret --severity CRITICAL,HIGH -o $(ScanResultsPath)/results.table bpfeapplication:CA2_TEST_V1
     displayName: 'Scan using Trivy scan'
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: 'Azure for Students(7263e463-da66-4888-a897-f34f5acea14b)'
+      scriptType: 'batch'
+      scriptLocation: 'inlineScript'
+      inlineScript: 'az acr login --name ainhabacr'
 
   - bash: |
       docker network create bpwebapp

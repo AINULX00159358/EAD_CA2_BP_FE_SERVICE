@@ -57,6 +57,7 @@ steps:
 
   - bash: |
       docker run --name bpfeapplication-test -p 32137:32137 --net bpwebapp --rm -d -e "PROFILE=test" bpfeapplication:CA2_TEST_V1
+      sleep 10
       docker ps
       docker logs bpdataservice-test
       docker logs bprecordingservice-test

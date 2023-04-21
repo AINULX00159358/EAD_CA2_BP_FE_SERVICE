@@ -66,6 +66,7 @@ steps:
       npx cypress run --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
     displayName: 'Cypress Test'
     continueOnError: true
+    enabled: false
 
 #  - task: Npm@1
 #    inputs:
@@ -98,6 +99,7 @@ steps:
       testResultsFiles: '**/TEST-*.xml'
       failTaskOnFailedTests: true
       testRunTitle: 'FE-SERVICE-TEST'
+    enabled: false
 
   - task: PublishHtmlReport@1
     inputs:

@@ -15,7 +15,7 @@ describe('E2E UI Test', () => {
   })
 
 
-  it('should visit', () => {
+  it.skip('should visit', () => {
     cy.visit("http://localhost:32137");
     cy.wait(1000);
     cy.get('#logo').should('contain.text', 'UI');

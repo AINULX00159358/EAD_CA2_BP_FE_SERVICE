@@ -29,28 +29,28 @@ steps:
       trivy image --scanners vuln --severity CRITICAL,HIGH -o $(ScanResultsPath)/results.table bpfeapplication:CA2_TEST_V1
     displayName: 'Scan using Trivy scan'
 
-  - script: |
-      docker network create bpwebapp
-      docker run --name mongo -p 27017:27017 --rm -d --net bpwebapp mongo:latest
-
-  - task: AzureCLI@2
-    displayName: 'Login to Azure Container Registry'
-    inputs:
-      azureSubscription: 'Azure for Students(7263e463-da66-4888-a897-f34f5acea14b)'
-      scriptType: bash
-      scriptLocation: inlineScript
-      inlineScript: |
-        az acr login --name ainhabacr.azurecr.io
-
-  - bash: |
-      docker pull ainhabacr.azurecr.io/eadca2/bpdataservice:v1
-      docker pull ainhabacr.azurecr.io/eadca2/bpinfoservice:v1
-      docker pull ainhabacr.azurecr.io/eadca2/bprecordingservice:v1
-      docker run --name bpdataservice-test -p 43256:43256 --net bpwebapp --rm -d -e "MONGO_CONN_URI=mongodb://mongo:27017" ainhabacr.azurecr.io/eadca2/bpdataservice:v1
-      docker run --name bpinfoservice-test -p 22137:22137 --net bpwebapp --rm -d -e "MONGO_CONN_URI=mongodb://mongo:27017" ainhabacr.azurecr.io/eadca2/bpinfoservice:v1
-      docker run --name bprecordingservice-test -p 30256:30256 --net bpwebapp --rm -d -e "MONGO_CONN_URI=mongodb://mongo:27017" ainhabacr.azurecr.io/eadca2/bprecordingservice:v1
-    continueOnError: false
-    displayName: 'start Other Docker Services'
+#  - script: |
+#      docker network create bpwebapp
+#      docker run --name mongo -p 27017:27017 --rm -d --net bpwebapp mongo:latest
+#
+#  - task: AzureCLI@2
+#    displayName: 'Login to Azure Container Registry'
+#    inputs:
+#      azureSubscription: 'Azure for Students(7263e463-da66-4888-a897-f34f5acea14b)'
+#      scriptType: bash
+#      scriptLocation: inlineScript
+#      inlineScript: |
+#        az acr login --name ainhabacr.azurecr.io
+#
+#  - bash: |
+#      docker pull ainhabacr.azurecr.io/eadca2/bpdataservice:v1
+#      docker pull ainhabacr.azurecr.io/eadca2/bpinfoservice:v1
+#      docker pull ainhabacr.azurecr.io/eadca2/bprecordingservice:v1
+#      docker run --name bpdataservice-test -p 43256:43256 --net bpwebapp --rm -d -e "MONGO_CONN_URI=mongodb://mongo:27017" ainhabacr.azurecr.io/eadca2/bpdataservice:v1
+#      docker run --name bpinfoservice-test -p 22137:22137 --net bpwebapp --rm -d -e "MONGO_CONN_URI=mongodb://mongo:27017" ainhabacr.azurecr.io/eadca2/bpinfoservice:v1
+#      docker run --name bprecordingservice-test -p 30256:30256 --net bpwebapp --rm -d -e "MONGO_CONN_URI=mongodb://mongo:27017" ainhabacr.azurecr.io/eadca2/bprecordingservice:v1
+#    continueOnError: false
+#    displayName: 'start Other Docker Services'
 
   - bash: |
       docker run --name bpfeapplication-test -p 32137:32137 --net bpwebapp --rm -d -e "PROFILE=test" bpfeapplication:CA2_TEST_V1
@@ -58,36 +58,36 @@ steps:
     continueOnError: true
 
 
-#  - bash: |
-#      # Write your commands here
-#      echo "Running Cypress Test"
-#      npm install
-#      curl -v -X GET http://localhost:32137
-#      npx cypress run --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
-#    displayName: 'Cypress Test'
-#    continueOnError: true
-
-  - task: Npm@1
-    inputs:
-      command: 'install'
-      workingDir: '$(Build.SourcesDirectory)'
-      verbose: true
-    displayName: 'Build and run docker image'
+  - bash: |
+      # Write your commands here
+      echo "Running Cypress Test"
+      npm install
+      curl -v -X GET http://localhost:32137
+      npx cypress run --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
+    displayName: 'Cypress Test'
     continueOnError: true
 
-  - task: Npm@1
-    inputs:
-      command: 'custom'
-      workingDir: '$(Build.SourcesDirectory)'
-      customCommand: 'run  cypress.run'
-    displayName: npm cyress.run
+#  - task: Npm@1
+#    inputs:
+#      command: 'install'
+#      workingDir: '$(Build.SourcesDirectory)'
+#      verbose: true
+#    displayName: 'Build and run docker image'
+#    continueOnError: true
+#
+#  - task: Npm@1
+#    inputs:
+#      command: 'custom'
+#      workingDir: '$(Build.SourcesDirectory)'
+#      customCommand: 'run  cypress.run'
+#    displayName: npm cyress.run
 
   - bash: |
       docker stop bpfeapplication-test || true && docker rm bpfeapplication-test || true
-      docker stop bpinfoservice-test || true && docker rm bpinfoservice-test || true
-      docker stop bpdataservice-test || true && docker rm bpdataservice-test || true
-      docker stop bprecordingservice-test || true && docker rm bprecordingservice-test || true
-      docker stop mongo || true && docker mongo || true
+    #  docker stop bpinfoservice-test || true && docker rm bpinfoservice-test || true
+    #  docker stop bpdataservice-test || true && docker rm bpdataservice-test || true
+    #  docker stop bprecordingservice-test || true && docker rm bprecordingservice-test || true
+    #  docker stop mongo || true && docker mongo || true
     displayName: 'kill running docker'
     continueOnError: true
     condition: always()

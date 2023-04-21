@@ -20,7 +20,12 @@ steps:
 
   - bash: |
       echo 'running docker build'
-      docker build --no-cache --tag bpfeapplication:CA2_TEST_V1 $(Build.SourcesDirectory)
+      docker build --no-cache --tag bpfeapplication:CA2_TEST_V1 
+  - task: Npm@1
+    inputs:
+      command: 'install'
+      workingDir: '$(Build.SourcesDirectory)'
+      verbose: true
     displayName: 'Build and run docker image'
     continueOnError: true
 
@@ -74,6 +79,14 @@ steps:
 #      npx cypress run --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
 #    displayName: 'Cypress Test'
 #    continueOnError: true
+
+
+  - task: Npm@1
+    inputs:
+      command: 'custom'
+      workingDir: '$(Build.SourcesDirectory)'
+      customCommand: 'run  cypress.run'
+    displayName: npm cyress.run
 
   - bash: |
       docker stop bpfeapplication-test || true && docker rm bpfeapplication-test || true

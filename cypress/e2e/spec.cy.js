@@ -1,9 +1,9 @@
 describe('E2E UI Test', () => {
 
-//before(() => {
-//
-//   //cy.visit(Cypress.env('BP_UI_SERVICE'), { timeout: 30000 });
-// });
+before(() => {
+
+  cy.visit(Cypress.env('APPURL'), { timeout: 30000 });
+});
 
 
   it('should visit', () => {

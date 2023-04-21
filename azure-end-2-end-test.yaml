@@ -58,7 +58,6 @@ steps:
       echo "Printing Report and workingDir in  $(System.DefaultWorkingDirectory)"
       cat ./cypress/results/TEST-bpinfoservice-Result.xml
     displayName: 'Cypress Test'
-
     continueOnError: true
 
   - bash: |
@@ -66,7 +65,8 @@ steps:
       docker stop bpinfoservice-test || true && docker rm bpinfoservice-test || true
       docker stop bpdataservice-test || true && docker rm bpdataservice-test || true
       docker stop bprecordingservice-test || true && docker rm bprecordingservice-test || true
-  displayName: 'kill running docker copy'
+      docker stop mongo || true && docker mongo || true
+    displayName: 'kill running docker'
     continueOnError: true
     condition: always()
 

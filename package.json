@@ -5,7 +5,8 @@
   "author": "Ainul Habib",
   "main": "bpfeservice.js",
   "scripts": {
-    "start": "node bpfeservice.js"
+    "start": "node bpfeservice.js",
+    "cypress.run": "cypress run --headless"
   },
   "devDependencies": {
     "cypress": "^12.9.0",

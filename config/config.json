@@ -2,9 +2,25 @@
 	"development": {
         "config_id": "development",
         "app_name": "BP Front End UI",
-	"bp_info_url": "http://localhost:22137/getCategory",
-	"bp_data_url": "http://localhost:43256/getRecords",
+	"bp_info_url": "http://localhost:22137",
+	"bp_data_url": "http://localhost:43256",
 	"bp_record_url": "http://localhost:30256/",
 	"exposedPort": "32137"
+	},
+	"test": {
+		"config_id": "test",
+		"app_name": "BP Front End UI",
+		"bp_info_url": "http://bpinfoservice-test:22137",
+		"bp_data_url": "http://dpdataservice-test:43256",
+		"bp_record_url": "http://bprecordingservice-test:30256/",
+		"exposedPort": "32137"
+	},
+	"cloud": {
+		"config_id": "cloud",
+		"app_name": "BP Front End UI",
+		"bp_info_url": "http://bpinfosvc:22137",
+		"bp_data_url": "http://bpdatasvc:43256",
+		"bp_record_url": "http://bprecordingsvc:30256/",
+		"exposedPort": "32137"
 	}
 }

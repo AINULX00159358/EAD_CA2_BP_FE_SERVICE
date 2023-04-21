@@ -6,12 +6,12 @@ const querystring = require('querystring');
 
 //Loading the config fileContents
 const config = require('./config/config.json');
-const defaultConfig = config.development;
+const defaultConfig = process.env.PROFILE || config.development;
 global.gConfig = defaultConfig;
-
-const BP_INFO_URL = process.env.BP_INFO_URL || config.development.bp_info_url;
-const BP_DATA_URL = process.env.BP_DATA_URL || config.development.bp_data_url;
-const BP_RECORD_URL = process.env.BP_RECORD_URL || config.development.bp_record_url;
+console.log("Config is set to ", defaultConfig.config_id, " based on env ", process.env.PROFILE)
+const BP_INFO_URL = process.env.BP_INFO_URL || defaultConfig.bp_info_url
+const BP_DATA_URL = process.env.BP_DATA_URL || defaultConfig.bp_data_url;
+const BP_RECORD_URL = process.env.BP_RECORD_URL || defaultConfig.bp_record_url;
 
 
 var header = '<!doctype html><html>'+
@@ -44,7 +44,7 @@ function getBpCategory(systolic, diastolic) {
 		"diastolic": diastolic
 	};
 
-	let bpCatUrl = BP_INFO_URL + "?" + querystring.stringify(parameterObj);
+	let bpCatUrl = BP_INFO_URL + "/getCategory" + "?" + querystring.stringify(parameterObj);
 	console.log("getBpCategory() URL--> ", bpCatUrl);
 
 	const options = {
@@ -79,7 +79,7 @@ function getHistoricalReading(email){
 				'Content-Type': 'application/json'
 			}
 		};
-		let req = http.request(BP_DATA_URL, options, function (response){
+		let req = http.request(BP_DATA_URL+"/getRecords", options, function (response){
 			let dataBuffer = [];
 			if (response.statusCode !== 200) {
 				reject("received error "+ response.statusMessage);

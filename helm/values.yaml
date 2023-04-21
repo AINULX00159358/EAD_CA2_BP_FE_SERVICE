@@ -3,3 +3,4 @@ befesvc:
   port: 32137
   targetPort: 32137
 space: "none"
+profile: "cloud"

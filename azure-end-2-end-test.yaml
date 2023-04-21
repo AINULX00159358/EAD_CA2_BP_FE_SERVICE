@@ -71,7 +71,7 @@ steps:
       echo "Running Cypress Test"
       npm install
       curl -v -X GET http://localhost:32137
-      ./node_modules/cypress/bin/cypress run --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
+      ./node_modules/cypress/bin/cypress run --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
     displayName: 'Cypress Test'
     continueOnError: true
 

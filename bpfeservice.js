@@ -3,7 +3,6 @@ const { parse } = require('querystring');
 const fs = require('fs');
 const querystring = require('querystring');
 
-
 //Loading the config fileContents
 const config = require('./config/config.json');
 let defaultConfig = config.development;
@@ -21,21 +20,21 @@ if (process.env.PROFILE) {
 	}
 }
 
-
-global.gConfig = defaultConfig;
 console.log("Config is set to ", defaultConfig.config_id, " based on env ", process.env.PROFILE)
 const BP_INFO_URL = process.env.BP_INFO_URL || defaultConfig.bp_info_url
 const BP_DATA_URL = process.env.BP_DATA_URL || defaultConfig.bp_data_url;
 const BP_RECORD_URL = process.env.BP_RECORD_URL || defaultConfig.bp_record_url;
+const space = process.env.SPACE || "none";
 
+const version = require('./package.json').version;
 
 var header = '<!doctype html><html>'+
 		     '<head>';
 
-const getEnv = '<div id="'+process.env.SPACE+'-circle"></div>';
+const getEnv = '<div id="'+space+'-circle"></div>';
 
 var body =  getEnv + '</head><body><div id="container">' +
-				 '<div id="logo">' + global.gConfig.app_name + '</div>' +
+				 '<div id="logo">' + defaultConfig.app_name + ' ('+ defaultConfig.config_id+ ' '+ version + '  '+ space + ')' +'</div>' +
 				 '<div id="space"></div>' +
 				 '<div id="form">' +
 				 '<form id="form" action="/" method="post"><center>'+
@@ -229,4 +228,4 @@ http.createServer(function (req, res) {
 		res.write(submitButton);
 		res.end(endBody);
 	}
-}).listen(global.gConfig.exposedPort);
+}).listen(defaultConfig.exposedPort);

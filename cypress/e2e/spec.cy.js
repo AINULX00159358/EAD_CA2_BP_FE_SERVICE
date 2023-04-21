@@ -2,7 +2,7 @@ describe('E2E UI Test', () => {
 
 before(() => {
 
-  cy.visit(Cypress.env('APPURL'), { timeout: 30000 });
+  cy.visit('http://20.105.119.110:32137/', { timeout: 30000 });
 });
 
 

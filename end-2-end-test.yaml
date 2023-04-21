@@ -39,8 +39,6 @@ steps:
 
   - bash: |
       echo "Running Cypress Test"
-#      node ./bpfeservice &
-#      export SEV_PID=$!
       export CYPRESS_APPURL=http://127.0.0.1:32137/
       npx cypress run --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
     displayName: 'Cypress Test'

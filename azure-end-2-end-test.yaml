@@ -3,7 +3,7 @@ pool:
 
 name: FE-SERVICE-TEST
 
-trigger: none
+# trigger: none
 
 
 variables:

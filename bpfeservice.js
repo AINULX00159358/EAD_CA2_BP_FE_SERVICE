@@ -192,6 +192,11 @@ function writeHistorical(res, hist_res){
 
 http.createServer(function (req, res) {
 
+    if (req.method === 'GET' && req.url == '/health') {
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        return;
+    }
+
 	res.writeHead(200, {'Content-Type': 'text/html'});
 
 	if (req.method === 'POST') {

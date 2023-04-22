@@ -20,6 +20,16 @@ steps:
   - task: DockerInstaller@0
     displayName: 'Install Docker 17.09.0-ce'
 
+  - task: AzureCLI@2
+    displayName: 'Login to Azure Container Registry'
+    inputs:
+      azureSubscription: 'Azure for Students(7263e463-da66-4888-a897-f34f5acea14b)'
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        az acr login --name ainhabacr.azurecr.io
+
+
   - bash: |
       echo 'running docker build'
       docker build --no-cache --tag bpfeapplication:CA2_TEST_V1 $(Build.SourcesDirectory)
@@ -32,6 +42,32 @@ steps:
       trivy image --scanners vuln --severity CRITICAL,HIGH -o $(ScanResultsPath)/results.table bpfeapplication:CA2_TEST_V1
     displayName: 'Scan using Trivy scan'
 
+  - bash: |
+      docker network create bpwebapp
+      docker run --name mongo -p 27017:27017 --rm -d --net bpwebapp mongo:latest
+      docker run --name bpdataservice-test -p 43256:43256 --net bpwebapp --rm -d -e "MONGO_CONN_URI=mongodb://mongo:27017" ainhabacr.azurecr.io/eadca2/bpdataservice:v1
+      docker run --name bpinfoservice-test -p 22137:22137 --net bpwebapp --rm -d -e "MONGO_CONN_URI=mongodb://mongo:27017" ainhabacr.azurecr.io/eadca2/bpinfoservice:v1
+      docker run --name bprecordingservice-test -p 30256:30256 --net bpwebapp --rm -d -e "MONGO_CONN_URI=mongodb://mongo:27017" ainhabacr.azurecr.io/eadca2/bprecordingservice:v1
+      sleep 2
+      docker ps
+    displayName: 'Run all Docker images'
+    continueOnError: false
+
+  - bash: |
+      echo "Running Cypress Test"
+      node ./bpfeservice &
+      sleep 1
+      export CYPRESS_APPURL=http://127.0.0.1:32137/
+      npx cypress run --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
+    displayName: 'Cypress Test'
+    continueOnError: false
+
+  - task: PublishTestResults@2
+    displayName: 'Publish Test Results ead-ca2-bp-fe-service'
+    inputs:
+      testResultsFiles: '**/TEST-*.xml'
+      failTaskOnFailedTests: true
+      testRunTitle: 'FE-SERVICE-E2E-TEST'
 
   - task: PublishHtmlReport@1
     inputs:

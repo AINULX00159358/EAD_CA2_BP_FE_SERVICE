@@ -194,6 +194,7 @@ http.createServer(function (req, res) {
 
     if (req.method === 'GET' && req.url == '/health') {
         res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end("{status: Healthy}");
         return;
     }
 

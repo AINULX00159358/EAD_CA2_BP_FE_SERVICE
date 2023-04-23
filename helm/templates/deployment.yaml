@@ -24,4 +24,4 @@ spec:
             - name: PROFILE
               value: {{ .Values.profile }}
             - name: SPACE
-              value: {{ .Values.space }}
+              value: {{ .Release.Namespace }}

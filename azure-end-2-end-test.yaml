@@ -55,7 +55,6 @@ steps:
 
   - bash: |
       echo "Running Cypress Test"
-      export PROFILE=test
       node ./bpfeservice &
       sleep 1
       export CYPRESS_APPURL=http://127.0.0.1:32137/

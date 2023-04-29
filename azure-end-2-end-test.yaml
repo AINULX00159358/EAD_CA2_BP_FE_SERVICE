@@ -45,9 +45,9 @@ steps:
   - bash: |
       docker network create bpwebapp
       docker run --name mongo --rm -p 27017:27017 -d --net bpwebapp -e "MONGO_INITDB_ROOT_USERNAME=zorok" -e "MONGO_INITDB_ROOT_PASSWORD=indiaNopels" mongo:latest
-      docker run --name bpdataservice-test -p 43256:43256 --net bpwebapp --rm -d -e "MONGO_CONN_URI=mongodb://zorok:indiaNopels@mongo:27017" ainhabacr.azurecr.io/eadca2/bpdataservice:v1
-      docker run --name bpinfoservice-test -p 22137:22137 --net bpwebapp --rm -d -e "MONGO_CONN_URI=mongodb://zorok:indiaNopels@mongo:27017" ainhabacr.azurecr.io/eadca2/bpinfoservice:v1
-      docker run --name bprecordingservice-test -p 30256:30256 --net bpwebapp --rm -d -e "MONGO_CONN_URI=mongodb://zorok:indiaNopels@mongo:27017" ainhabacr.azurecr.io/eadca2/bprecordingservice:v1
+      docker run --name bpdataservice-test -p 43256:43256 --net bpwebapp --rm -d -e "MONGO_CONN_URL=mongodb://zorok:indiaNopels@mongo:27017" ainhabacr.azurecr.io/eadca2/bpdataservice:v1
+      docker run --name bpinfoservice-test -p 22137:22137 --net bpwebapp --rm -d -e "MONGO_CONN_URL=mongodb://zorok:indiaNopels@mongo:27017" ainhabacr.azurecr.io/eadca2/bpinfoservice:v1
+      docker run --name bprecordingservice-test -p 30256:30256 --net bpwebapp --rm -d -e "MONGO_CONN_URL=mongodb://zorok:indiaNopels@mongo:27017" ainhabacr.azurecr.io/eadca2/bprecordingservice:v1
       sleep 2
       docker ps
     displayName: 'Run all Docker images'

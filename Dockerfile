@@ -9,7 +9,7 @@ COPY package*.json ./
 
 # Note NOT copying entire working dir, ONLY copying the package.json files
 # This allows us to take advantage of cached Docker layers
-
+ENV CYPRESS_INSTALL_BINARY=0
 RUN npm install
 # If you are building your code for production
 # RUN npm ci --only=production

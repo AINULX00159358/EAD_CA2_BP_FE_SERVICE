@@ -1,7 +1,7 @@
 pool:
   vmImage: ubuntu-20.04
 
-name: FE-SERVICE-E2E
+name: BP-WEB-APP-E2E
 
 trigger: none
 
@@ -14,7 +14,7 @@ steps:
 
   - bash: |
       echo "Running Cypress Test"
-      export CYPRESS_APPURL=http://40.127.211.136/
+      export CYPRESS_APPURL=http://$(IPADDRESS)/
       npx cypress run --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
     displayName: 'Cypress Test'
     continueOnError: false

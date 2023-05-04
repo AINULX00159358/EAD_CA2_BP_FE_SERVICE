@@ -8,9 +8,6 @@ trigger: none
 variables:
   - group: "PUBLIC IP"
 
-# variables:
-#   - group: "PUBLIC IP"
-
 steps:
   - task: Npm@1
     displayName: 'npm install'

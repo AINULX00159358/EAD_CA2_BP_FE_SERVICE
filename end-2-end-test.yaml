@@ -6,7 +6,10 @@ name: BP-WEB-APP-E2E
 trigger: none
 
 variables:
-- group: "PUBLIC IP"
+  - group: "PUBLIC IP"
+
+# variables:
+#   - group: "PUBLIC IP"
 
 steps:
   - task: Npm@1
@@ -19,9 +22,25 @@ steps:
       echo "Running Cypress Test"
       export CYPRESS_APPURL=http://$(IPADDRESS)/
       npx cypress run --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
-    displayName: 'Cypress Test'
+    displayName: 'E2E Test LIVE'
     continueOnError: false
+    condition: eq(variables.SITE, 'live')
+  
+  - bash: |
+      echo "Running Cypress Test"
+      export CYPRESS_APPURL=http://$(IPADDRESS)/blue
+      npx cypress run --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
+    displayName: 'E2E Test BLUE'
+    continueOnError: false
+    condition: eq(variables.SITE, 'blue')
 
+  - bash: |
+      echo "Running Cypress Test"
+      export CYPRESS_APPURL=http://$(IPADDRESS)/green
+      npx cypress run --browser chrome --reporter junit --reporter-options "mochaFile=./cypress/results/TEST-bpfeservice-Result.xml,toConsole=true"
+    displayName: 'E2E Test Green'
+    continueOnError: false
+    condition: eq(variables.SITE, 'green')
   - task: PublishTestResults@2
     displayName: 'Publish Test Results ead-ca2-bp-fe-service'
     inputs:

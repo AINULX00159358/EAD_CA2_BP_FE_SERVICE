@@ -5,9 +5,6 @@ name: BP-WEB-APP-E2E
 
 trigger: none
 
-variables:
-  - group: "PUBLIC IP"
-
 steps:
   - task: Npm@1
     displayName: 'npm install'
